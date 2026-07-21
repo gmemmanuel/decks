@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoBEES Chief of Staff Model</title>
+  <style>
+    body{margin:0;display:grid;place-items:center;min-height:100vh;font-family:system-ui,sans-serif;background:#f7f4ec;color:#17313b}
+    p{max-width:34rem;padding:2rem;text-align:center}
+  </style>
+</head>
+<body>
+  <p>Loading…</p>
+  <script>
+    (async () => {
+      const files = [
+        '.parts/01.b64', '.parts/02.b64', '.parts/03.b64',
+        '.parts/04.b64', '.parts/05.b64', '.parts/06.b64'
+      ];
+      const parts = await Promise.all(files.map(async file => {
+        const response = await fetch(file, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Could not load ${file}`);
+        return response.text();
+      }));
+      const binary = atob(parts.join('').replace(/\s/g, ''));
+      const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+      const page = new TextDecoder('utf-8').decode(bytes);
+      document.open();
+      document.write(page);
+      document.close();
+    })().catch(error => {
+      console.error(error);
+      document.body.innerHTML = '<p>The page could not be loaded. Please refresh and try again.</p>';
+    });
+  </script>
+</body>
+</html>
